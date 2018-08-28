@@ -55,11 +55,12 @@ void acceptTCPHandler(Eventloop* el, int fd, void* data) {
 }
 
 void queryCommandHandler(Eventloop* el, int fd, void* data) {
-
+	Client* client = (Client*) data;
 	printf("This is queryCommandHandler\n");
-	wchar_t buff[1024] = {0};
-	while(recvfrom(fd, buff, 1024, 0, NULL, NULL) > 0) {
+	char buff[1024] = {0};
+	while(recvfrom(fd, buff, 1, 0, NULL, NULL) > 0) {
       printf("%s\n", buff);
     }
+    Ds_string* ds_string = Ds_string_new(buff);
     
 }

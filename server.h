@@ -28,5 +28,6 @@ struct Client {
 extern struct Server* server;
 
 void initServer();
+void setSignalHandler();
 
 #endif

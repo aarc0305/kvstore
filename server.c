@@ -1,10 +1,17 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <signal.h>
 #include "server.h"
 #include "network.h"
 
 // Global variable
 struct Server* server;
+
+// Signal handler
+static void ctrlCSignalHandler() {
+	printf("Ctrl C signal handling ......\n");
+	exit(0);
+}
 
 void initServer() {
 
@@ -13,7 +20,7 @@ void initServer() {
 	/*
 		By default, the maximum number of clients is 100.
 	*/
-	server -> max_clients_count = 0;
+	server -> max_clients_count = 100;
 	server -> current_clients_count = 0;
 
 	/* 
@@ -35,10 +42,21 @@ void initServer() {
 	}
 }
 
+void setSignalHandler() {
+	struct sigaction sa;
+	sigemptyset(&sa.sa_mask);
+	sa.sa_flags = 0;
+	sa.sa_handler = ctrlCSignalHandler;
+	if (sigaction(SIGINT, &sa, NULL) == -1) {
+		printf("Sigaction fails!\n");
+	}
+}
+
 int main(int argc, char* argv[]) {
 
 	printf("This is a simple kvstore server!\n");
 	printf("Initiate the server.......\n");
+	setSignalHandler();
 	initServer();
 	while(1) {
 		processEvent(server -> el);
