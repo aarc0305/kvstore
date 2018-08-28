@@ -1,7 +1,10 @@
 CC = gcc
 
-a.out: eventloop.o el_kqueue.o server.o network.o
-	$(CC) eventloop.o el_kqueue.o server.o network.o
+a.out: datastructure.o eventloop.o el_kqueue.o server.o network.o
+	$(CC) datastructure.o eventloop.o el_kqueue.o server.o network.o
+
+datastructure.o: datastructure.c
+	$(CC) -c datastructure.c
 
 eventloop.o: eventloop.c
 	$(CC) -c eventloop.c

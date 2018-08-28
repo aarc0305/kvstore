@@ -8,7 +8,9 @@
 #define MAX_EVNET_COUNT 200
 #define MAX_FIRED_EVENT_COUNT 200
 
-typedef void event_handler();
+typedef struct Eventloop Eventloop;
+
+typedef void event_handler(Eventloop* el, int fd, void* data);
 
 typedef struct El_event El_event;
 struct El_event {
@@ -16,6 +18,8 @@ struct El_event {
 	int fd;
 	event_handler *r_handler;
 	event_handler *w_handler;
+	// Store the data which would be processed later, such as the pointer of client.
+	void* data;
 };
 
 typedef struct El_fired_event El_fired_event;
@@ -32,8 +36,10 @@ struct Eventloop {
 	El_fired_event* fired_events[MAX_FIRED_EVENT_COUNT];
 };
 
+
+
 Eventloop* createEventloop(int setSize);
-void addEvent(Eventloop* el, int fd, int mask, event_handler *handler);
+void addEvent(Eventloop* el, int fd, int mask, event_handler *handler, void* data);
 void processEvent(Eventloop* el);
 
 #endif

@@ -34,12 +34,32 @@ int initTCPServer(char* address, int port) {
 	return fd;
 }
 
-void acceptTCPHandler(int fd) {
-	wchar_t buff[1024] = {0};
+void acceptTCPHandler(Eventloop* el, int fd, void* data) {
+
     int cfd = accept(fd, NULL, NULL);
-    printf("There is one client: %d\n", cfd);    
-    while(recvfrom(cfd, buff, 1024, 0, NULL, NULL) > 0) {
+    printf("There is one client: %d\n", cfd);
+
+    
+    // Check if the number of clients is larger than the max of clients.
+    (server -> current_clients_count)++;
+    if (server -> current_clients_count > server -> max_clients_count) {
+    	printf("There could not be more clients with this server.\n");
+    	return;
+    }
+
+    // Create the client and add the cfd to the eventloop.
+    Client* client = malloc(sizeof(Client));
+    addEvent(el, cfd, EL_READABLE, queryCommandHandler, client);
+    return;
+
+}
+
+void queryCommandHandler(Eventloop* el, int fd, void* data) {
+
+	printf("This is queryCommandHandler\n");
+	wchar_t buff[1024] = {0};
+	while(recvfrom(fd, buff, 1024, 0, NULL, NULL) > 0) {
       printf("%s\n", buff);
     }
-    return;
+    
 }

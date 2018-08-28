@@ -3,6 +3,7 @@
 #include "server.h"
 
 int initTCPServer(char* address, int port);
-void acceptTCPHandler();
+void acceptTCPHandler(Eventloop* el, int fd, void* data);
+void queryCommandHandler(Eventloop* el, int fd, void* data);
 
 #endif

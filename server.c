@@ -10,6 +10,12 @@ void initServer() {
 
 	server = malloc(sizeof(*server));
 
+	/*
+		By default, the maximum number of clients is 100.
+	*/
+	server -> max_clients_count = 0;
+	server -> current_clients_count = 0;
+
 	/* 
 		By default, the binding address is 127.0.0.1 and the 
 		binding port is 3000.
@@ -25,7 +31,7 @@ void initServer() {
 
 	// Add the event of the serverfd to the eventloop
 	for (int i = 0; i < (server -> bind_address_count); i++) {
-		addEvent(server -> el, (server -> serverfds)[i], EL_READABLE, acceptTCPHandler);
+		addEvent(server -> el, (server -> serverfds)[i], EL_READABLE, acceptTCPHandler, NULL);
 	}
 }
 
