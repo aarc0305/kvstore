@@ -9,6 +9,10 @@
 
 typedef struct Server Server;
 typedef struct Client Client;
+typedef struct KVCommand KVCommand;
+typedef struct KVDatabase KVDatabase;
+
+typedef void KVCommandHandler(Client* client);
 
 struct Server {
 	Eventloop* el;
@@ -19,6 +23,7 @@ struct Server {
 	int current_clients_count;
 	int max_clients_count;
 	Client* clients[MAX_CLIENTS_COUNT];
+
 };
 
 typedef struct Client Client;
@@ -26,6 +31,16 @@ struct Client {
 	Ds_string* queryBuf;
 	int argc;
 	char* argv;
+	KVCommand* command;
+};
+
+struct KVDatabase {
+
+};
+
+struct KVCommand {
+	char* commandName;
+	KVCommandHandler* commanHandler;
 };
 
 // Extern declaarations

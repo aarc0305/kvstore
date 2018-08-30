@@ -53,7 +53,7 @@ void setSignalHandler() {
 }
 
 int main(int argc, char* argv[]) {
-
+	
 	printf("This is a simple kvstore server!\n");
 	printf("Initiate the server.......\n");
 	setSignalHandler();
