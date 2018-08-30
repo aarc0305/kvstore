@@ -31,7 +31,7 @@ void initServer() {
 	(server -> bind_addresses)[0] = "127.0.0.1";
 	server -> bind_port = 3000;
 
-	server -> el = createEventloop(server -> bind_address_count);
+	server -> el = createEventloop(server -> max_clients_count);
 	for (int i = 0; i < server -> bind_address_count; i++) {
 		(server -> serverfds)[i] = initTCPServer((server -> bind_addresses)[i], server -> bind_port);
 	}

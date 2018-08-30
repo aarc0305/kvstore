@@ -10,7 +10,6 @@ struct Api_state {
 };
 
 void apiCreate(Eventloop* el) {
-	printf("Create a kqueue!\n");
 	int kqfd = kqueue();
 	Api_state* state = el -> state = malloc(sizeof(Api_state));
 	state -> events = malloc(sizeof(struct kevent) * (el -> setSize));
@@ -44,7 +43,6 @@ int apiPoll(Eventloop* el) {
 	int kqfd = state -> kqfd;
 	struct kevent* events = state -> events;
 	int evtNums = kevent(state -> kqfd, NULL, 0, events, el -> setSize, NULL);
-
 	for (int i = 0; i < evtNums; i++) {
 		(el -> fired_events)[i] -> fd = events[i].ident;
 		if (events[i].filter == EVFILT_READ) {

@@ -11,7 +11,7 @@ Compile and run the server
 cd kvstore  
 make
 
-# Run the server
-./a.out
+# Run the kvserver
+./kvserver
 
 ```

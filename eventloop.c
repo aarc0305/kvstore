@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "el_kqueue.h"
+#include "el_select.h"
 #include "eventloop.h"
 
 Eventloop* createEventloop(int setSize) {
@@ -39,7 +39,6 @@ void processEvent(Eventloop* el) {
 	for (int i = 0; i < evtNum; i++) {
 		int fired_fd = (el -> fired_events)[i] -> fd;
 		void* data = (el -> events[fired_fd]) -> data;
-		printf("Fired fd: %d\n", fired_fd);
 		if ((el -> fired_events)[i] -> mask == EL_READABLE) {
 			(el -> events[fired_fd]) -> r_handler(el, fired_fd, data);
 		}

@@ -4,7 +4,9 @@
 #include <arpa/inet.h>
 #include <netinet/in.h>
 #include <string.h>
+#include <fcntl.h>
 #include "network.h"
+#include "compiler.h"
 
 #define BACKLOG 10
 /* 
@@ -24,7 +26,6 @@ int initTCPServer(char* address, int port) {
 		printf("inet_pton failed!\n");
 	}
 	saddr.sin_port = htons(port);
-	printf("saddr.sin_port: %d\n", saddr.sin_port);
 	if (bind(fd, (struct sockaddr*) &saddr, sizeof(struct sockaddr_in)) == -1) {
 		printf("Fail to bind the address!\n");
 	}
@@ -56,11 +57,25 @@ void acceptTCPHandler(Eventloop* el, int fd, void* data) {
 
 void queryCommandHandler(Eventloop* el, int fd, void* data) {
 	Client* client = (Client*) data;
-	printf("This is queryCommandHandler\n");
 	char buff[1024] = {0};
-	while(recvfrom(fd, buff, 1, 0, NULL, NULL) > 0) {
-      printf("%s\n", buff);
-    }
+
+	// Set the file descriptor to non-blocking.
+	int flags= fcntl(fd, F_GETFL, 0);
+	fcntl(fd, F_SETFL, flags | O_NONBLOCK);
+
+	// Read the command from the client socket
+	while(recvfrom(fd, buff, 1024, 0, NULL, NULL) > 0) {
+	}
+
     Ds_string* ds_string = Ds_string_new(buff);
-    
+
+    // store the command in the querybuf of the client and process it.
+    client -> queryBuf = ds_string;
+    if (ds_string -> length <= 0) {
+    	// nop
+    } else {
+    	printf("read length: %d\n", ds_string -> length);
+    	tokenizer(ds_string);
+    }
 }
+
