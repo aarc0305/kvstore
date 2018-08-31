@@ -17,6 +17,29 @@ Ds_object* Ds_object_new(int ds_type, void* data) {
 	return ds_object;
 }
 
+// Return -1 if two objects are not equal and return 0 if two objects are the same.
+int compareObject(Ds_object* this_object, Ds_object* that_object) {
+
+	int this_type = this_object -> ds_type;
+	int that_type = that_object -> ds_type;
+	if (this_type != that_type) {
+		return -1;
+	}
+	if (this_type == DS_STRING) {
+		Ds_string* this_ds_string = (Ds_string*)(this_object -> data);
+		Ds_string* that_ds_string = (Ds_string*)(that_object -> data);
+		char* this_string = this_ds_string -> buf;
+		char* that_string = that_ds_string -> buf;
+		if (strcmp(this_string, that_string) == 0) {
+			return 0;
+		} else {
+			return -1;
+		}
+	}
+	return -1;
+
+}
+
 Dictionary* Dictionary_new(int table_size) {
 	Dictionary* dictionary = malloc(sizeof(Dictionary));
 	Dict_hashtable* hashtable = malloc(sizeof(Dict_hashtable));
@@ -53,9 +76,28 @@ Ds_object* Dictionary_get(Dictionary* dictionary, Ds_object* key) {
 	int hashval = 0;
 	int type = key -> ds_type;
 	if (type == DS_STRING) {
+		/*
+			If the key is a ds_string, use the hash function and the
+			string stored in the ds_string to calculate the hash value.
+			Then, use this value as an index to get value in the table.
+			An index may include several keys, therefore, we must scan 
+			all of the keys in this index.
+		*/
 		Ds_string* ds_string = (Ds_string*) key -> data;
 		hashval = simpleHash(ds_string -> buf, ds_string -> length, table_size);
-		// TODO: find the value in the hash table
+		Dict_entry* target = (dictionary -> hashtable -> table)[hashval];
+		if (target == NULL) {
+			printf("The key is not found in this table!");
+			return NULL;
+		}
+		// Scan all the keys in this index.
+		while (target != NULL) {
+			if (compareObject(target -> key, key) == 0) {
+				// Get the key, therefore, return the correspondding value.
+				return target -> value;
+			}
+			target = target -> next;
+		}
 	}
 	return NULL;
 

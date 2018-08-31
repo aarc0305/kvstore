@@ -42,11 +42,12 @@ struct Dictionary {
 
 Ds_string* Ds_string_new(char* string);
 Ds_object* Ds_object_new(int ds_type, void* data);
-Dictionary* Dictionary_new(int table_size);
+int compareObject(Ds_object* this_object, Ds_object* that_object);
 
-// Get thevalue according to the key. Return 0 if successful and return -1 if not.
+Dictionary* Dictionary_new(int table_size);
 int Dictionary_add(Dictionary* dictionary, Ds_object* key, Ds_object* value);
 Ds_object* Dictionary_get(Dictionary* dictionary, Ds_object* key);
+
 
 // Set of hash functions
 int simpleHash(char* string, int slength, int table_size);
