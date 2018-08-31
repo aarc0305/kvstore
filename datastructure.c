@@ -60,7 +60,52 @@ Dictionary* Dictionary_new(int table_size) {
 	return dictionary;
 }
 
+
+// Return 0 if successful and return -1 if not.
 int Dictionary_add(Dictionary* dictionary, Ds_object* key, Ds_object* value) {
+
+	if (dictionary == NULL) {
+		printf("The dictionary is not existed!\n");
+		return -1;
+	}
+
+	int table_size = dictionary -> hashtable -> table_size;
+	int type = key -> ds_type;
+	int hashval = 0;
+	if (type == DS_STRING) {
+		Ds_string* key_ds_string = (Ds_string*) (key -> data);
+		hashval = simpleHash(key_ds_string -> buf, key_ds_string -> length, table_size);
+		if ((dictionary -> hashtable -> table)[hashval] == NULL) {
+			// If there are no entries in the index, just input it.
+			(dictionary -> hashtable -> table)[hashval] = malloc(sizeof(Dict_entry));
+			(dictionary -> hashtable -> table)[hashval] -> key = key;
+			(dictionary -> hashtable -> table)[hashval] -> value = value;
+			(dictionary -> hashtable -> table)[hashval] -> next = NULL;
+		} else {
+			Dict_entry* target = (dictionary -> hashtable -> table)[hashval];
+			Dict_entry* last_target = NULL;
+			while (target != NULL) {
+				/*
+					Compare with the input key. 
+					If the target and the input key are the same, 
+					replace the value with the new one and return 0.
+					Otherwise, look for the next target.
+				*/ 
+				if (compareObject(target -> key, key) == 0) {
+					target -> value = value;
+					return 0;
+				} else {
+					last_target = target;
+					target = target -> next;
+				}
+			}
+			last_target -> next = malloc(sizeof(Dict_entry));
+			last_target -> next -> key = key;
+			last_target -> next -> value = value;
+			last_target -> next -> next = NULL;
+		}
+
+	}
 	return 0;
 }
 
@@ -93,7 +138,7 @@ Ds_object* Dictionary_get(Dictionary* dictionary, Ds_object* key) {
 		// Scan all the keys in this index.
 		while (target != NULL) {
 			if (compareObject(target -> key, key) == 0) {
-				// Get the key, therefore, return the correspondding value.
+				// Get the key, therefore, return the corresponding value.
 				return target -> value;
 			}
 			target = target -> next;

@@ -9,8 +9,10 @@ struct Server* server;
 
 // Signal handler
 static void ctrlCSignalHandler() {
+
 	printf("Ctrl C signal handling ......\n");
 	exit(0);
+	
 }
 
 void initServer() {
@@ -40,9 +42,11 @@ void initServer() {
 	for (int i = 0; i < (server -> bind_address_count); i++) {
 		addEvent(server -> el, (server -> serverfds)[i], EL_READABLE, acceptTCPHandler, NULL);
 	}
+
 }
 
 void setSignalHandler() {
+
 	struct sigaction sa;
 	sigemptyset(&sa.sa_mask);
 	sa.sa_flags = 0;
@@ -50,10 +54,11 @@ void setSignalHandler() {
 	if (sigaction(SIGINT, &sa, NULL) == -1) {
 		printf("Sigaction fails!\n");
 	}
+
 }
 
 int main(int argc, char* argv[]) {
-	
+
 	printf("This is a simple kvstore server!\n");
 	printf("Initiate the server.......\n");
 	setSignalHandler();
