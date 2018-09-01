@@ -15,6 +15,7 @@ typedef struct KVDatabase KVDatabase;
 typedef void KVCommandHandler(Client* client);
 
 struct Server {
+
 	Eventloop* el;
 	int bind_address_count;
 	char* bind_addresses[MAX_BIND_COUNT];
@@ -23,6 +24,8 @@ struct Server {
 	int current_clients_count;
 	int max_clients_count;
 	Client* clients[MAX_CLIENTS_COUNT];
+	KVDatabase** databases;
+	int num_database;
 
 };
 
@@ -35,7 +38,7 @@ struct Client {
 };
 
 struct KVDatabase {
-
+	Dictionary* dict;
 };
 
 struct KVCommand {

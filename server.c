@@ -18,7 +18,19 @@ static void ctrlCSignalHandler() {
 void initServer() {
 
 	server = malloc(sizeof(*server));
-
+	
+	/*
+		Initialize the database:
+		By default, the number of database is 16 
+		and the size of each database is 4.
+	*/
+	server -> num_database = 16;
+	server -> databases = malloc(sizeof(KVDatabase*) * (server -> num_database));
+	for (int i = 0; i < server -> num_database; i++) {
+		(server -> databases)[i] = malloc(sizeof(KVDatabase));
+		(server -> databases)[i] -> dict = Dictionary_new(4);
+	}
+	
 	/*
 		By default, the maximum number of clients is 100.
 	*/
