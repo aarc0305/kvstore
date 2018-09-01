@@ -23,7 +23,7 @@ struct Server {
 	int serverfds[MAX_BIND_COUNT];
 	int current_clients_count;
 	int max_clients_count;
-	Client* clients[MAX_CLIENTS_COUNT];
+	Client** clients;
 	KVDatabase** databases;
 	int num_database;
 
@@ -35,6 +35,7 @@ struct Client {
 	int argc;
 	char* argv;
 	KVCommand* command;
+	KVDatabase* current_database;
 };
 
 struct KVDatabase {
@@ -50,6 +51,7 @@ struct KVCommand {
 extern struct Server* server;
 
 void initServer();
+void initClient(Client* client);
 void setSignalHandler();
 
 #endif

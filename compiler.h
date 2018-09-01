@@ -5,7 +5,8 @@
 
 #define MAX_TOKEN_COUNT 100
 
-void tokenizer(Ds_string* ds_string);
+int tokenizer(Ds_string* ds_string);
 void parser();
+void reset_tokens();
 
 #endif

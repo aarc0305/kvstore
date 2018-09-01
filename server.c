@@ -36,6 +36,7 @@ void initServer() {
 	*/
 	server -> max_clients_count = 100;
 	server -> current_clients_count = 0;
+	server -> clients = malloc(sizeof(Client*) * server -> max_clients_count);
 
 	/* 
 		By default, the binding address is 127.0.0.1 and the 
@@ -55,6 +56,10 @@ void initServer() {
 		addEvent(server -> el, (server -> serverfds)[i], EL_READABLE, acceptTCPHandler, NULL);
 	}
 
+}
+
+void initClient(Client* client) {
+	
 }
 
 void setSignalHandler() {

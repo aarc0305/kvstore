@@ -48,9 +48,18 @@ void acceptTCPHandler(Eventloop* el, int fd, void* data) {
     	return;
     }
 
-    // Create the client and add the cfd to the eventloop.
-    Client* client = malloc(sizeof(Client));
-    addEvent(el, cfd, EL_READABLE, queryCommandHandler, client);
+    /*
+    	1. Create the client
+    	2. Add the client to the client table of the server
+    	3. Add the cfd to the eventloop.
+    */ 
+    if (server -> current_clients_count >= server -> max_clients_count) {
+    	printf("The server is full of clients!\n");
+    	return;
+    }
+    Client* new_client = (server -> clients)[server -> current_clients_count] = malloc(sizeof(Client));
+    new_client -> current_database = (server -> databases)[0];
+    addEvent(el, cfd, EL_READABLE, queryCommandHandler, new_client);
     return;
 
 }
@@ -75,7 +84,7 @@ void queryCommandHandler(Eventloop* el, int fd, void* data) {
     	// nop
     } else {
     	printf("read length: %d\n", ds_string -> length);
-    	tokenizer(ds_string);
+    	printf("%d\n", tokenizer(ds_string));
     }
 }
 

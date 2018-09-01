@@ -3,6 +3,7 @@
 #include <sys/socket.h>
 #include <arpa/inet.h>
 #include <netinet/in.h>
+#include <sys/types.h>
 #include <string.h>
 #include <fcntl.h>
 #include <unistd.h>
@@ -26,7 +27,8 @@ void client_test() {
 	if (connect(socket_fd, (struct sockaddr *) &server_addr, sizeof(struct sockaddr_in)) < 0) {
 		printf("Fail to connect\n");
 	}
-	char* buff = "Set direction right";
+	
+	char* buff = "set d1irection right ttt";
 	if (write(socket_fd, buff, strlen(buff)) < 0) {
 		printf("Fail to write\n");
 	}
