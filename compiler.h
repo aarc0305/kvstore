@@ -5,8 +5,22 @@
 
 #define MAX_TOKEN_COUNT 100
 
+typedef enum Token_type {
+	TOKEN_SET,
+	TOKEN_GET,
+	TOKEN_UPDATE,
+	TOKEN_DELETE,
+	TOKEN_VARIABLE
+} Token_type;
+
+typedef struct Token Token;
+struct Token {
+	Token_type type;
+	char* value;
+};
+
 int tokenizer(Ds_string* ds_string);
-void parser();
-void reset_tokens();
+void parser(Client* client);
+Token* token_new(char* value, Token_type type);
 
 #endif

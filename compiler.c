@@ -4,7 +4,7 @@
 #include <regex.h>
 #include "compiler.h"
 
-char* tokens[MAX_TOKEN_COUNT] = {0};
+Token* tokens[MAX_TOKEN_COUNT] = {NULL};
 
 // Return -1 if there are lexical errors and return the number of tokens if not.
 int tokenizer(Ds_string* ds_string) {
@@ -25,12 +25,20 @@ int tokenizer(Ds_string* ds_string) {
 			Currently, the keyword "set", "get", 
 			"update" and "delete" are supported.
 		*/ 
-		if (strcmp(temp, "set") == 0 || 
-			strcmp(temp, "get") == 0 ||
-			strcmp(temp, "update") == 0 ||
-			strcmp(temp, "delete") == 0) 
-		{
-			tokens[token_count++] = temp;
+		if (strcmp(temp, "set") == 0) {
+			tokens[token_count++] = token_new(temp, TOKEN_SET);
+			temp = strtok(NULL, " ");
+			continue;
+		} else if (strcmp(temp, "get") == 0) {
+			tokens[token_count++] = token_new(temp, TOKEN_GET);
+			temp = strtok(NULL, " ");
+			continue;
+		} else if (strcmp(temp, "update") == 0) {
+			tokens[token_count++] = token_new(temp, TOKEN_UPDATE);
+			temp = strtok(NULL, " ");
+			continue;
+		} else if (strcmp(temp, "delete") == 0) {
+			tokens[token_count++] = token_new(temp, TOKEN_DELETE);
 			temp = strtok(NULL, " ");
 			continue;
 		}
@@ -53,8 +61,7 @@ int tokenizer(Ds_string* ds_string) {
 			token_count = -1;
 			break;
 		} else {
-			printf("match!\n");
-			tokens[token_count++] = temp;
+			tokens[token_count++] = token_new(temp, TOKEN_VARIABLE);
 		}
 		temp = strtok(NULL, " ");
 		regfree(&reg);
@@ -62,17 +69,38 @@ int tokenizer(Ds_string* ds_string) {
 	return token_count;
 }
 
-void parser(int num_tokens) {
+void parser(Client* client) {
 	/*
 		Currently, there are four types of commands
-		The bnf of the grammar are as follows:
+		The bnf of the grammar is as follows:
+
+		command: setCommand
+		| getCommand
+		| updateCommand
+		| deleteCommand
+		;
+
+		setCommand: "set" key value;
+
+		getCommand: "get" key;
+
+		updateCommand: "update" key value;
+
+		deleteCommand: "delete" key
+
+		key: VARIABLE;
+
+		value: VARIABLE;
 	*/
-	if (strcmp(tokens[0], "set") == 0) {
+	if (tokens[0] == NULL) {
+		printf("Syntax error!\n");
 	}
+
 }
 
-void reset_tokens() {
-	for (int i = 0; i < MAX_TOKEN_COUNT; i++) {
-		tokens[i] = 0;
-	}
+Token* token_new(char* value, Token_type type) {
+	Token* token = malloc(sizeof(Token));
+	token -> value = value;
+	token -> type = type;
+	return token;
 }
