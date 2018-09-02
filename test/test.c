@@ -28,7 +28,7 @@ void client_test() {
 		printf("Fail to connect\n");
 	}
 	
-	char* buff = "set d1irection right ttt";
+	char* buff = "set apple red";
 	if (write(socket_fd, buff, strlen(buff)) < 0) {
 		printf("Fail to write\n");
 	}

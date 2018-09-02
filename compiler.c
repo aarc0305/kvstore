@@ -94,6 +94,33 @@ void parser(Client* client) {
 	*/
 	if (tokens[0] == NULL) {
 		printf("Syntax error!\n");
+		return;
+	}
+
+	// setCommand and updateCommand
+	if (tokens[0] -> type == TOKEN_SET || tokens[0] -> type == TOKEN_UPDATE) {
+		if (tokens[1] == NULL || tokens[2] == NULL) {
+			printf("Syntax error!\n");
+			return;
+		} else {
+			if (tokens[1] -> type != TOKEN_VARIABLE || tokens[2] -> type != TOKEN_VARIABLE) {
+				printf("Syntax error!\n");
+				return;
+			}
+		}
+	} else if (tokens[0] -> type == TOKEN_GET || tokens[0] -> type == TOKEN_DELETE) {
+		if (tokens[1] == NULL || tokens[2] != NULL) {
+			printf("Syntax error!\n");
+			return;
+		} else {
+			if (tokens[1] -> type != TOKEN_VARIABLE) {
+				printf("Syntax error!\n");
+				return;
+			}
+		}
+	} else {
+		printf("Syntax error!\n");
+		return;
 	}
 
 }

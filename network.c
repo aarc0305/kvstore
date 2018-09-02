@@ -83,8 +83,9 @@ void queryCommandHandler(Eventloop* el, int fd, void* data) {
     if (ds_string -> length <= 0) {
     	// nop
     } else {
-    	printf("read length: %d\n", ds_string -> length);
-    	printf("%d\n", tokenizer(ds_string));
+        // Use the compiler to parse the input command
+        tokenizer(ds_string);
+        parser(client);
     }
 }
 
