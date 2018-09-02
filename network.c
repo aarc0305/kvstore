@@ -91,6 +91,7 @@ void queryCommandHandler(Eventloop* el, int fd, void* data) {
             return;
         }
         int parse_result = parser(client);
+        freeTokens();
         if (parse_result < 0) {
             // There are syntax errors
             return;

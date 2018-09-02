@@ -3,17 +3,17 @@
 #include <signal.h>
 #include <string.h>
 #include "server.h"
-#include "network.h"
+#include "command_handler.h"
 
 // Global variable
 struct Server* server;
 
 // All of the commands are stored in this command table
 KVCommand commad_table[] = {
-	{"set", NULL},
-	{"get", NULL},
-	{"update", NULL},
-	{"delete", NULL},
+	{"set", setHandler},
+	{"get", getHandler},
+	{"update", updateHandler},
+	{"delete", deleteHandler},
 	{"select", NULL}
 };
 
@@ -88,6 +88,7 @@ int processCommand(Client* client) {
 		return -1;
 	}
 	KVCommand* command = lookupCommand((client -> argv)[0]);
+	(command -> commanHandler)(client);
 	return 0;
 }
 

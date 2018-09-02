@@ -21,6 +21,7 @@ struct Token {
 
 int tokenizer(Ds_string* ds_string);
 int parser(Client* client);
+void freeTokens();
 Token* token_new(char* value, Token_type type);
 
 #endif

@@ -145,6 +145,13 @@ int parser(Client* client) {
 
 }
 
+void freeTokens() {
+	for (int i = 0; i < MAX_TOKEN_COUNT; i++) {
+		free(tokens[i]);
+		tokens[i] = NULL;
+	}
+}
+
 Token* token_new(char* value, Token_type type) {
 	Token* token = malloc(sizeof(Token));
 	token -> value = value;
