@@ -69,7 +69,8 @@ int tokenizer(Ds_string* ds_string) {
 	return token_count;
 }
 
-void parser(Client* client) {
+// Return -1 if there are syntax errors and return 0 if not.
+int parser(Client* client) {
 	/*
 		Currently, there are four types of commands
 		The bnf of the grammar is as follows:
@@ -94,33 +95,52 @@ void parser(Client* client) {
 	*/
 	if (tokens[0] == NULL) {
 		printf("Syntax error!\n");
-		return;
+		return -1;
 	}
 
-	// setCommand and updateCommand
 	if (tokens[0] -> type == TOKEN_SET || tokens[0] -> type == TOKEN_UPDATE) {
 		if (tokens[1] == NULL || tokens[2] == NULL) {
 			printf("Syntax error!\n");
-			return;
+			return -1;
 		} else {
 			if (tokens[1] -> type != TOKEN_VARIABLE || tokens[2] -> type != TOKEN_VARIABLE) {
 				printf("Syntax error!\n");
-				return;
+				return -1;
 			}
+			/*
+				When there are no syntax errors, store the command in the argv of the client.
+				The number of the tokens in the set and update command is 3.
+			*/ 
+			client -> argc = 3;
+			client -> argv = malloc(sizeof(char*) * client -> argc);
+			for (int i = 0; i < client -> argc; i++) {
+				(client -> argv)[i] = tokens[i] -> value;
+			}
+			return 0;
 		}
 	} else if (tokens[0] -> type == TOKEN_GET || tokens[0] -> type == TOKEN_DELETE) {
 		if (tokens[1] == NULL || tokens[2] != NULL) {
 			printf("Syntax error!\n");
-			return;
+			return -1;
 		} else {
 			if (tokens[1] -> type != TOKEN_VARIABLE) {
 				printf("Syntax error!\n");
-				return;
+				return -1;
 			}
+			/* 
+				When there are no syntax errors, store the command in the argv of the client.
+				The number of the tokens in the get and delete is 2.
+			*/
+			client -> argc = 2;
+			client -> argv = malloc(sizeof(char*) * client -> argc);
+			for (int i = 0; i < client -> argc; i++) {
+				(client -> argv)[i] = tokens[i] -> value;
+			}
+			return 0;
 		}
 	} else {
 		printf("Syntax error!\n");
-		return;
+		return -1;
 	}
 
 }

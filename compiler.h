@@ -20,7 +20,7 @@ struct Token {
 };
 
 int tokenizer(Ds_string* ds_string);
-void parser(Client* client);
+int parser(Client* client);
 Token* token_new(char* value, Token_type type);
 
 #endif

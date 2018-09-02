@@ -33,7 +33,7 @@ typedef struct Client Client;
 struct Client {
 	Ds_string* queryBuf;
 	int argc;
-	char* argv;
+	char** argv;
 	KVCommand* command;
 	KVDatabase* current_database;
 };
@@ -49,9 +49,11 @@ struct KVCommand {
 
 // Extern declaarations
 extern struct Server* server;
+extern KVCommand commad_table[];
 
 void initServer();
-void initClient(Client* client);
+KVCommand* lookupCommand(char* commandName);
+int processCommand(Client* client);
 void setSignalHandler();
 
 #endif

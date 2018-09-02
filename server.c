@@ -1,11 +1,21 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <signal.h>
+#include <string.h>
 #include "server.h"
 #include "network.h"
 
 // Global variable
 struct Server* server;
+
+// All of the commands are stored in this command table
+KVCommand commad_table[] = {
+	{"set", NULL},
+	{"get", NULL},
+	{"update", NULL},
+	{"delete", NULL},
+	{"select", NULL}
+};
 
 // Signal handler
 static void ctrlCSignalHandler() {
@@ -58,8 +68,27 @@ void initServer() {
 
 }
 
-void initClient(Client* client) {
-	
+// Return NULL if there are any errors.
+KVCommand* lookupCommand(char* commandName) {
+	KVCommand* result = NULL;
+	size_t table_size = sizeof(commad_table) / sizeof(KVCommand);
+	for (int i = 0; i < table_size; i++) {
+		if (strcmp(commandName, commad_table[i].commandName) == 0) {
+			result = &(commad_table[i]);
+			break;
+		}
+	}
+	return result;
+}
+
+// Return -1 if there are any errors and return 0 if successful.
+int processCommand(Client* client) {
+	if (client -> argc == 0) {
+		printf("There are no commands to be executed!\n");
+		return -1;
+	}
+	KVCommand* command = lookupCommand((client -> argv)[0]);
+	return 0;
 }
 
 void setSignalHandler() {

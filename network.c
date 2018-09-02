@@ -83,9 +83,21 @@ void queryCommandHandler(Eventloop* el, int fd, void* data) {
     if (ds_string -> length <= 0) {
     	// nop
     } else {
-        // Use the compiler to parse the input command
-        tokenizer(ds_string);
-        parser(client);
+
+        // Use the compiler to parse the input command and save the command in the client
+        int token_num = tokenizer(ds_string);
+        if (token_num < 0) {
+            // There are lexical errors
+            return;
+        }
+        int parse_result = parser(client);
+        if (parse_result < 0) {
+            // There are syntax errors
+            return;
+        }
+
+        // If there are no errors while compiling, process the command.
+        processCommand(client);
     }
 }
 
