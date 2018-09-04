@@ -17,15 +17,24 @@ typedef void KVCommandHandler(Client* client);
 struct Server {
 
 	Eventloop* el;
+
+	// The network information of the server
 	int bind_address_count;
 	char* bind_addresses[MAX_BIND_COUNT];
 	int bind_port;
 	int serverfds[MAX_BIND_COUNT];
+
+	// The information of the connected clients
 	int current_clients_count;
 	int max_clients_count;
 	Client** clients;
+
+	// The information of databases
 	KVDatabase** databases;
 	int num_database;
+
+	// This the period of the server time handler
+	int period;
 
 };
 
@@ -52,6 +61,7 @@ extern struct Server* server;
 extern KVCommand commad_table[];
 
 void initServer();
+void serverTimeHandler(Eventloop* el, void* data);
 KVCommand* lookupCommand(char* commandName);
 int processCommand(Client* client);
 void setSignalHandler();

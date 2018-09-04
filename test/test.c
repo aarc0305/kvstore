@@ -33,7 +33,7 @@ void client_test() {
 		printf("Fail to write\n");
 	}
 	sleep(10);
-	buff = "get apple";
+	buff = "gSet apple";
 	if (write(socket_fd, buff, strlen(buff)) < 0) {
 		printf("Fail to write\n");
 	}

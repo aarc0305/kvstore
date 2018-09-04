@@ -4,6 +4,7 @@
 
 void setHandler(Client* client) {
 	printf("This is a setHandler\n");
+	KVDatabase* current_database = client -> current_database;
 }
 
 void getHandler(Client* client) {

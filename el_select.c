@@ -52,7 +52,6 @@ int apiPoll(Eventloop* el) {
 
 	memcpy(state -> _readfds, state -> readfds, sizeof(fd_set));
 	memcpy(state -> _writefds, state -> writefds, sizeof(fd_set));
-	sleep(2);
 	returnVal = select(nfds, state -> _readfds, state -> _writefds, NULL, NULL);
 	if (returnVal > 0) {
 		for (int i = 0; i < nfds; i++) {

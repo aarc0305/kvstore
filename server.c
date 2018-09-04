@@ -66,6 +66,14 @@ void initServer() {
 		addEvent(server -> el, (server -> serverfds)[i], EL_READABLE, acceptTCPHandler, NULL);
 	}
 
+	// Add the time event which would trigger serverTimeHandler
+	server -> period = 2;
+	addTimeEvent(server -> el, serverTimeHandler, server -> period);
+
+}
+
+void serverTimeHandler(Eventloop* el, void* data) {
+	printf("This is the server time handler!\n");
 }
 
 // Return NULL if there are any errors.
